@@ -2,13 +2,11 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
-
-
-
 # City Model
 class City(models.Model):
     city_name = models.CharField(max_length=50)
     country = models.CharField(max_length=50)
+
     def __str__(self):
         return self.city_name
 
@@ -24,34 +22,50 @@ season = (
 )
 
 activity = (
-    ('Au', 'Austin'),
-    ('Lo', 'Logan'),
-    ('Da', 'Daniel'),
-    ('Mi', 'Mike'),
-    ('Ma', 'Marielle'),
-    ('Mi', 'Shirley'),
+    ("BP", "Backpacking"),
+    ("SS", "Siteseeing"),
+    ("LS", "Leisure"),
+    ("BS", "Business"),
 )
+
+
+person = (
+    ('Mn', 'Men'),
+    ('Wm', 'Women'),
+    ('By', 'Baby'),
+)
+
+
 
 class Item (models.Model):
     name = models.CharField(max_length=50)
     season = models.CharField(
-    max_length=2,
-    choices= season,
-    default= season[0][0],
-    )
-    activity =  models.CharField(
         max_length=2,
-        choices= activity,
-        default=activity[0][0],
+        choices=season,
+        # default=season[0][0],
     )
+    activity = models.CharField(
+        max_length=2,
+        choices=activity,
+        # default=activity[0][0],
+    )
+
+
+    person = models.CharField(
+        max_length=2,
+        choices=person,
+        default=person[0][0],
+    )
+
     vote = models.IntegerField(
-        default = 0
+        default=0
     )
+
     # 1:M model, establishing the foreign key
     city = models.ForeignKey(City, on_delete=models.CASCADE)
     
     def __str__(self):
-    # Nice method for obtaining the friendly value of a Field.choice
+        # Nice method for obtaining the friendly value of a Field.choice
         return (f"{self.get_season_display()} on {self.name}")
 
     # sort by voting
