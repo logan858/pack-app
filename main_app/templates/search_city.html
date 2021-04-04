@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<script type ="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.exp&key=AIzaSyABt5_xdXjRl4pFDKfdUtAM4Bv5lgt1vo8&libraries=places"></script>
+<script type ="text/javascript" src="/static/javascript/autocomplete.js"></script>
+
+<h1>Enter a destination</h1>
+<hr/>
+<p>search by city:
+    <form method="post" action="{% url 'searched_city' %}">
+        {% csrf_token %}
+        <input type="text" id="searchTextField" name="search" placeholder="Search City...">
+        <button>go</button>
+    </form>
+</p>
+
+
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block content %}
+
+
+<h3>List:</h3>
+
+<div>
+    <ul>
+        <li>sample list item 1</li>
+        <li>sample list item 2</li>
+        <li>sample list item 3</li>
+        <li>sample list item 4</li>
+        <li>sample list item 5</li>
+        <li>sample list item 6</li>
+        <li>etc</li>
+    </ul>
+</div>
+
+
+<h4>add item</h4>
+<form method="post" action="{% url 'create' %}">
+    {% csrf_token %}
+    Name of item:<input type="text" name="name"><br/>
+    type of travel:<select name="category">
+        <option value="outdoors">Outdoors</option>
+        <option value="metropolitan">Metropolitan</option>
+        <option value="history">Sights/History</option>
+        <option value="business">Business</option>
+        <option value="beaches">Beaches</option>
+        <option value="family">Family</option>
+        <option value="other">Other</option>
+    </select><br/>
+    season:<select name="season">
+        <option value="spring">Spring</option>
+        <option value="summer">Summer</option>
+        <option value="winter">Winter</option>
+        <option value="fall">Fall</option>
+    </select><br/>
+    <button>Add item!</button>
+</form>
+{% endblock %}

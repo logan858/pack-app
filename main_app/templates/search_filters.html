@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Filters</h1>
+<hr/>
+<p>your filters:
+    <form method="post" action="{% url 'searched_filters'%}">
+        {% csrf_token %}
+        departure date:<input type="datetime-local" name="season"><br/>
+        type of travel:<select name="category">
+            <option value="outdoors">Outdoors</option>
+            <option value="metropolitan">Metropolitan</option>
+            <option value="history">Sights/History</option>
+            <option value="business">Business</option>
+            <option value="beaches">Beaches</option>
+            <option value="other">Other</option>
+        </select><br/>
+        type of packer:<select name="packer">
+            <option value="light">Light</option>
+            <option value="medium">Medium</option>
+            <option value="heavy">Heavy</option>
+        </select>
+            <br/>
+        <button>go</button>
+    </form>
+</p>
+
+{% endblock %}
