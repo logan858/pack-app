@@ -266,13 +266,36 @@ def add_item(request, trip_id):
     return redirect("/trip/%s/" % (trip_id))
 
 def item(request, trip_id, item_id):
-    pass
+    trip = Trip.objects.get(id=trip_id)
+    item = Item.objects.get(id=item_id)
+    print(trip, item)
+    return render(request, "items/view_item.html", {
+        "trip": trip,
+        "item": item,
+        "categories": getChoices(CATEGORIES),
+        "seasons" : getChoices(SEASONS),
+        "ages" : getChoices(AGES),
+        "genders" : getChoices(GENDERS),
+        "activities": getChoices(ACTIVITIES),
+    })
 
 def edit_item(request, trip_id, item_id):
-    pass
+    trip = Trip.objects.get(id=trip_id)
+    item = Item.objects.get(id=item_id)
+    item.name = request.POST["name"]
+    item.category = request.POST["category"]
+    item.season = request.POST["season"]
+    item.age = request.POST["age"]
+    item.gender = request.POST["gender"]
+    item.activity = request.POST["activities"]
+    item.save()
+    return redirect("/trip/%s/" % (trip.id))
 
 def delete_item(request, trip_id, item_id):
-    pass
+    trip = Trip.objects.get(id=trip_id)
+    item = Item.objects.get(id=item_id)
+    item.delete()
+    return redirect("/trip/%s/" % (trip.id))
 
 
 @login_required
