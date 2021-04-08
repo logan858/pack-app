@@ -14,6 +14,7 @@ from dotenv import load_dotenv
 load_dotenv()
 import os
 my_key = os.environ.get("DB_KEY")
+from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -83,7 +84,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         # 'NAME': 'Packd',
-        'NAME': 'Pavckapp1',
+        'NAME': 'packapp1',
         'USER': 'postgres',
         'PASSWORD': my_key,
     }
