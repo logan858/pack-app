@@ -2,126 +2,127 @@
 {% block content %}
 {% load static %}
 <div class="container px-4 multi-collapse show" id="mobile-container" aria-expanded="true">
-  <div class="card card-shadow border-0 mt-4">
-    <div class="card-body">
-      <text class="text-normal">Local Weather - {{address}}</text>
-      <div class="d-flex justify-content-around align-items-start">
-        {% if weather_icon == 'rain' %}
-          <img src="../../static/images/rain.png" alt="..." style="max-width: 100px;">
-        {% endif %}
-        {% if weather_icon == 'cloudy' %}
-          <img src="../../static/images/cloudy.png" alt="..." style="max-width: 100px;">
-        {% endif %}
-        {% if weather_icon == 'snow' %}
-          <img src="../../static/images/snow.png" alt="..." style="max-width: 100px;">
-        {% endif %}
-        {% if weather_icon == 'clear-day' %}
-          <img src="../../static/images/clear-day.png" alt="..." style="max-width: 100px;">
-        {% endif %}
-        {% if weather_icon == 'partly-cloudy-day' %}
-          <img src="../../static/images/partly-cloudy.png" alt="..." style="max-width: 100px;">
-        {% endif %}
-        {% if weather_icon == 'clear-day' %}
-          <img src="../../static/images/clear-day.png" alt="..." style="max-width: 100px;">
-        {% endif %}
-        
-        <div>
-          <h1>{{today_temp_high}}</h1>
+  <div class="card card-shadow border-0 mt-4 weather-card" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+    <div class="card-body text-center">
+      <text class="text-header">{{ trip.city}}, {{ trip.country}}</text>
+      <div class="row d-flex">
+        <div class="col-6 align-self-center">
+          {% if weather_icon == 'rain' %}
+            <img src="../../static/images/rain.png" alt="..." class="weather-icon p-2">
+          {% endif %}
+          {% if weather_icon == 'cloudy' %}
+            <img src="../../static/images/cloudy.png" alt="..." class="weather-icon p-2">
+          {% endif %}
+          {% if weather_icon == 'snow' %}
+            <img src="../../static/images/snow.png" alt="..." class="weather-icon p-2">
+          {% endif %}
+          {% if weather_icon == 'clear-day' %}
+            <img src="../../static/images/clear-day.png" alt="..." class="weather-icon p-2">
+          {% endif %}
+          {% if weather_icon == 'partly-cloudy-day' %}
+            <img src="../../static/images/partly-cloudy.png" alt="..." class="weather-icon p-2">
+          {% endif %}
+        </div>
+        <div class="col-6 align-self-center">
+          <text class="display-6">{{today_temp_high}}</text>
         </div>
       </div>
-      <div class="d-flex justify-content-around align-items-start">
-        <p class="text-muted"> {{condition}} </p>
-        <p class="text-muted"> H: {{today_temp_high}} &nbsp;&nbsp; L: {{today_temp_low}} </p>
+      <div class="row d-flex justify-content-around align-items-start">
+        <div class="col-6"> 
+          <text class="text-muted my-0"> {{condition|title }} </text>
+        </div>
+        <div class="col-6"> 
+          <text class="text-muted my-0"> H: {{today_temp_high}} &nbsp;&nbsp; L: {{today_temp_low}} </text>
+        </div>
       </div>
-      <!-- Button trigger modal -->
-       <p type="button"  data-bs-toggle="modal" data-bs-target="#staticBackdrop" style="text-align: -webkit-right; font-style: italic;" >
-          ...forecast
-        </p>
-      <!-- Modal -->
-      <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="staticBackdropLabel">{{address}} <span class="text-muted" style="font-size: 12px;font-style: italic;"> ....15 days weather forecast</span></h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-              <div class="accordion accordion-flush" id="accordionFlushExample">
-                {% for el in forecast %}
-                <div class="accordion-item">
-                  <h2 class="accordion-header" id="flush-headingOne">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne{{el.datetime}}" aria-expanded="false" aria-controls="flush-collapseOne">
+    </div>
+  </div>
+  <!-- Modal -->
+  <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">{{trip.city}}, {{trip.country}} <span class="text-muted" style="font-size: 12px;font-style: italic;"> ....15 days weather forecast</span></h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="accordion accordion-flush" id="accordionFlushExample">
+            {% for el in forecast %}
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="flush-headingOne">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne{{el.datetime}}" aria-expanded="false" aria-controls="flush-collapseOne">
+                  {{el.datetime}}
+                </button>
+              </h2>
+              <div id="flush-collapseOne{{el.datetime}}" class="accordion-collapse collapse" aria-labelledby="flush-headingOne{{el.datetime}}" data-bs-parent="#accordionFlushExample">
+                <div class="accordion-body">
+                  <div class="card">
+                    <div class="card-header">
                       {{el.datetime}}
-                    </button>
-                  </h2>
-                  <div id="flush-collapseOne{{el.datetime}}" class="accordion-collapse collapse" aria-labelledby="flush-headingOne{{el.datetime}}" data-bs-parent="#accordionFlushExample">
-                    <div class="accordion-body">
-                      <div class="card">
-                        <div class="card-header">
-                          {{el.datetime}}
+                    </div>
+                    <div class="card-body">
+                      <div class="d-flex justify-content-between align-items-start">
+                        {% if el.icon == 'rain' %}
+                          <img src="../../static/images/rain.png" alt="..." style="max-width: 80px;">
+                        {% endif %}
+                        {% if el.icon == 'cloudy' %}
+                          <img src="../../static/images/cloudy.png" alt="..." style="max-width: 80px;">
+                        {% endif %}
+                        {% if el.icon == 'snow' %}
+                          <img src="../../static/images/snow.png" alt="..." style="max-width: 80px;">
+                        {% endif %}
+                        {% if el.icon == 'clear-day' %}
+                          <img src="../../static/images/clear-day.png" alt="..." style="max-width: 80px;">
+                        {% endif %}
+                        {% if el.icon == 'partly-cloudy-day' %}
+                          <img src="../../static/images/partly-cloudy.png" alt="..." style="max-width: 80px;">
+                        {% endif %}
+                        {% if el.icon == 'wind' %}
+                          <img src="../../static/images/wind.png" alt="..." style="max-width: 80px;">
+                        {% endif %}
+                        <div>
+                          <h3>{{el.tempmax}}&#x2103;</h3>
                         </div>
-                        <div class="card-body">
-                          <div class="d-flex justify-content-between align-items-start">
-                            {% if el.icon == 'rain' %}
-                              <img src="../../static/images/rain.png" alt="..." style="max-width: 80px;">
-                            {% endif %}
-                            {% if el.icon == 'cloudy' %}
-                              <img src="../../static/images/cloudy.png" alt="..." style="max-width: 80px;">
-                            {% endif %}
-                            {% if el.icon == 'snow' %}
-                              <img src="../../static/images/snow.png" alt="..." style="max-width: 80px;">
-                            {% endif %}
-                            {% if el.icon == 'clear-day' %}
-                              <img src="../../static/images/clear-day.png" alt="..." style="max-width: 80px;">
-                            {% endif %}
-                            {% if el.icon == 'partly-cloudy-day' %}
-                              <img src="../../static/images/partly-cloudy.png" alt="..." style="max-width: 80px;">
-                            {% endif %}
-                            {% if el.icon == 'wind' %}
-                              <img src="../../static/images/wind.png" alt="..." style="max-width: 80px;">
-                            {% endif %}
-                            
-                            <div>
-                              <h3>{{el.tempmax}}&#x2103;</h3>
-                            </div>
-                          </div>
-                          <div class="d-flex justify-content-between align-items-start">
-                            <p class="text-muted"> {{el.conditions}} </p>
-                            <p class="text-muted"> H: {{el.tempmax}}&#x2103; &nbsp;&nbsp; L: {{el.tempmax}}&#x2103; </p>
-                          </div>
-                          <div class="d-flex justify-content-between align-items-start">
-                            <p class="text-muted"> Sunrise : {{el.sunrise}} </p>
-                            <p class="text-muted"> Sunset : {{el.sunset}} </p>
-                          </div>
-                          <div class="d-flex justify-content-between align-items-start">
-                            <p class="text-muted"> Wind : {{el.windspeed}}mph </p>
-                            <p class="text-muted"> Feels Like : {{el.feelslike}}&#x2103; </p>
-                          </div>
-                          <div class="d-flex justify-content-between align-items-start">
-                            <p class="text-muted"> Chance of Rain: {{el.precipprob}}%</p>
-                            <p class="text-muted"> Humidity: {{el.humidity}}% </p>
-                          </div>
-                        </div>
+                      </div>
+                      <div class="d-flex justify-content-between align-items-start">
+                        <p class="text-muted"> {{el.conditions}} </p>
+                        <p class="text-muted"> H: {{el.tempmax}}&#x2103; &nbsp;&nbsp; L: {{el.tempmax}}&#x2103; </p>
+                      </div>
+                      <div class="d-flex justify-content-between align-items-start">
+                        <p class="text-muted"> Sunrise : {{el.sunrise}} </p>
+                        <p class="text-muted"> Sunset : {{el.sunset}} </p>
+                      </div>
+                      <div class="d-flex justify-content-between align-items-start">
+                        <p class="text-muted"> Wind : {{el.windspeed}}mph </p>
+                        <p class="text-muted"> Feels Like : {{el.feelslike}}&#x2103; </p>
+                      </div>
+                      <div class="d-flex justify-content-between align-items-start">
+                        <p class="text-muted"> Chance of Rain: {{el.precipprob}}%</p>
+                        <p class="text-muted"> Humidity: {{el.humidity}}% </p>
                       </div>
                     </div>
                   </div>
                 </div>
-                {% endfor %}
               </div>
             </div>
-            <div class="modal-footer">
-              
-            </div>
+            {% endfor %}
           </div>
+        </div>
+        <div class="modal-footer">
         </div>
       </div>
     </div>
-    <!-- end of weather forecast -->
   </div>
+  <!-- end of weather forecast -->
   <div class="card card-shadow border-0 mt-4 ">
     <div class="card-body">
-      <div class="card-title">
-        <text class="text-normal">Packing List</text>
+      <div class="card-title d-flex">
+        <div class="me-auto">
+          <text class="text-header me-auto">Packing List</text>
+        </div>
+        <div class="ms-auto">
+          <a class="text-header" href="{% url 'edit_trip' trip.id %}">Edit</a>
+        </div>
       </div>
       {% for category, items in categorized_items.items %}
       {% if items|length > 0 %}
@@ -178,8 +179,7 @@
     </div>
   </div>
   <div class="text-center">
-    <button class="btn button-hover button-shadow border-0 mt-4" type="button" data-toggle="collapse"
-      data-target=".multi-collapse" aria-expanded="false" aria-controls="collapseExample">
+    <button class="btn button-hover button-shadow border-0 mt-4" type="button" data-toggle="collapse" data-target=".multi-collapse" aria-expanded="false" aria-controls="collapseExample">
       <text class="text-normal">+ Add Item</text>
     </button>
   </div>
@@ -271,8 +271,6 @@
   </div>
 </div>
 <input type="hidden" id="trip_id" value="{{ trip.id}}">
-
-
 
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>

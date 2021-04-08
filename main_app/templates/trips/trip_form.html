@@ -8,13 +8,13 @@
     <div class="mt-4">
       <label for="searchTextField" class="form-label text-header">Where are you going?</label>
       <div class="input-group input-group-sm mb-3">
-        <input type="search" class="form-control" name="search" id="searchTextField" required>
+        <input type="search" class="form-control" name="search" value="{{ trip.city }}, {{ trip.country}}" id="searchTextField" required>
       </div>
     </div>
     <div class="mt-4">
       <label for="searchTextField" class="form-label text-header">What day do you arrive?</label>
       <div class="input-group input-group-sm mb-3">
-        <input type="date" class="form-control" name="date" id="date" required>
+        <input type="date" class="form-control" name="date" id="date" value="{{ trip.date|date:"Y-m-d" }}" required>
       </div>
     </div>
     <div class="mt-4">
@@ -39,13 +39,16 @@
         <li class="my-1 ps-2" id="traveller-template">
           <div class="d-flex">
             <div class="input-group input-group-sm">
-              <input type="text" name="name" placeholder="Name" class="form-control" required>
-              <input type="number" name="age" min="0" max="110" placeholder="Age" class="form-control pe-1 age" required>
+              <input type="text" name="name" placeholder="Name" class="form-control" value="{{ traveller.name }}" required>
+              <input type="number" name="age" min="0" max="110" placeholder="Age" class="form-control pe-1 age" value="{{ traveller.age }}" required>
               <select class="form-select form-select-sm pe-0 gender" name="gender" aria-label=".form-select-sm" required>
-                <option value="" disabled selected>Gender</option>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-                <option value="Other">Other</option>
+                <option value="{{ traveller.gender }}" selected>{{ traveller.gender }}</option>
+                {% for gender in genders %}
+                  {% if traveller.gender == gender %}
+                  {% else %}
+                  <option value="{{ gender }}">{{ gender}}</option>
+                  {% endif %}
+                {% endfor %}
               </select>
             </div>
             <div class="text-center mx-1 my-auto">
@@ -56,12 +59,13 @@
           </div>
         </li>
         {% endfor %}
+        {% if travellers == false %}
         <li class="my-1 ps-2" id="traveller-template">
           <div class="d-flex">
             <div class="input-group input-group-sm">
               <input type="text" name="name" placeholder="Name" class="form-control" required>
               <input type="number" name="age" min="0" max="110" placeholder="Age" class="form-control pe-1 age" required>
-              <select class="form-select form-select-sm pe-0 gender" name="gender" aria-label=".form-select-sm" required>
+              <select class="form-select form-select-sm pe-0 gender" name="gender" aria-label=".form-select-sm"required>
                 <option value="" disabled selected>Gender</option>
                 <option value="Male">Male</option>
                 <option value="Female">Female</option>
@@ -75,6 +79,7 @@
             </div>
           </div>
         </li>
+        {% endif %}
       </ol>
     </div>
     <div class="text-center">

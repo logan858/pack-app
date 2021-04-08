@@ -34,6 +34,7 @@
         <div class="mb-4">
           <label for="login-password" class="form-label mb-2">Password</label>
           <input type="password" class="form-control" id="login-password" name="password1" autocomplete="new-password" required>
+          <small id="password1-help" class="form-text text-muted">Your password must contain at least 8 characters and numbers as well.</small>
         </div>
       </div>
       <div class="col-12">
@@ -49,12 +50,6 @@
       </div>
     </div>
   </form>
-  {% comment %} <form action="">
-    {{ form }}
-    {% csrf_token %}
-
-  </form> {% endcomment %}
-  {% comment %} <p class="text-center text-muted my-2">or</p> {% endcomment %}
   <div class="d-grid mt-3">
     <a href="{% url 'login' %}" class="btn rounded-pill py-2 button-shadow button-height">
       <text class="text-header">Login</text>

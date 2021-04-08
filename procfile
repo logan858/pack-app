@@ -1,1 +1,1 @@
-web: gunicorn packd-app.wsgi
+web: gunicorn packapp1.wsgi

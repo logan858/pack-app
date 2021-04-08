@@ -282,6 +282,16 @@ header {
     color: red;
 }
 
+.weather-icon {
+    max-width: 75px;
+}
+
+.weather-card:hover {
+    cursor: pointer;
+    filter: brightness(105%);
+    background-color: var(--button-secondary);
+}
+
 /* upvote/downvote button "container" styling */
 .upvote {
     border:none;
