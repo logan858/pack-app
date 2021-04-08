@@ -13,7 +13,7 @@ urlpatterns = [
     path("trip/<int:trip_id>/edit", views.edit_trip, name="edit_trip"),
     path("trip/<int:trip_id>/delete", views.delete_trip, name="delete_trip"),
     path("trip/<int:trip_id>/item/add/", views.add_item, name="add_item"),
-    path("trip/<int:trip_id>/item/", views.item, name="item"),
+    path("trip/<int:trip_id>/item/<int:item_id>/", views.item, name="item"),
     path("trip/<int:trip_id>/item/<int:item_id>/edit/", views.edit_item, name="edit_item"),
     path("trip/<int:trip_id>/item/<int:item_id>/delete/", views.delete_item, name="delete_item"),
 
