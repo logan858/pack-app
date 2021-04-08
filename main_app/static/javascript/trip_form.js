@@ -24,13 +24,15 @@ addTravellerButton.addEventListener("click", e => {
 })
 
 document.querySelector(".remove-traveller-button").addEventListener("click", e => {
+    e.preventDefault();
+    removeTravellerButtons = document.querySelectorAll(".remove-traveller-button");
     removeButtons()
 })
 
 function removeButtons() {
-    removeTravellerButtons = document.querySelectorAll(".remove-traveller-button")
     removeTravellerButtons.forEach(removeTravellerButton => {
         removeTravellerButton.addEventListener("click", e => {
+            e.preventDefault();
             const target = e.target
             if (target == removeTravellerButton) {
                 let removed = false

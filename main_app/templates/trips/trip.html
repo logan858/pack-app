@@ -160,7 +160,6 @@
             <label class="form-check-label" for="flexCheckDefault">{{ item.item.name|title }}</label>
           </div>
           {% endif %}
-
           <div class="ms-3 d-flex score-div">
             <svg width="16" height="24" viewBox="0 0 16 16" fill="#C4C4C4" xmlns="http://www.w3.org/2000/svg" class="score score-up me-auto {% if item.vote.vote > 0 %} score-up-post {% endif %}">
               <path d="M13 8.35714L6.5 0L0 8.35714H3.28333V13H9.71667V8.35714H13Z" class="path" />
@@ -170,7 +169,6 @@
               <path d="M13 4.64286L6.5 13L0 4.64286H3.28333V3.57628e-07H9.71667V4.64286H13Z" class="path"/>
             </svg>
           </div>
-
         </div>
         {% endfor %}
       </div>
