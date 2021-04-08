@@ -10,7 +10,7 @@ from dotenv import load_dotenv
 load_dotenv()
 import os
 import requests
-from .models import User, Trip, Vote, Item, Activity, Traveler, CATEGORIES, ACTIVITIES, SEASONS, AGES, GENDERS, getChoices
+from .models import User, Trip, Vote, Item, Activity, Traveler, CATEGORIES, ACTIVITIES, SEASONS, AGES, GENDERS, getChoices, NUMBERS_ITEMS
 import re, json
 import requests
 
@@ -89,6 +89,7 @@ def new_trip(request):
                 "text": "All Trips"
             },
             "activities": activities,
+            "number_items" : NUMBERS_ITEMS
         })
     elif request.method == "POST":
         body = request.POST
@@ -228,27 +229,95 @@ def trip(request, trip_id):
             "today_temp_low" : current_temp_low,
             "condition" : current_condition,
             'weather_icon' : icon,
+            "number_items" : NUMBERS_ITEMS
         })
 
 @login_required
 def edit_trip(request, trip_id):
     trip = Trip.objects.get(id=trip_id)
     travelers = Traveler.objects.filter(trip_id=trip.id)
-    return render(request, "trips/trip_form.html", {
-        "trip": trip,
-        "travellers": travelers,
-        "activities" : getChoices(ACTIVITIES),
-        "genders" : getChoices(GENDERS),
-    })
+
+    if request.method == "GET":
+        my_activities = []
+        for activity in Activity.objects.filter(trip_id=trip.id):
+            my_activities.append(activity.activity)
+        
+        print(my_activities)
+        return render(request, "trips/trip_form.html", {
+            "edit" : True,
+            "trip": trip,
+            "travellers": travelers,
+            "activities" : getChoices(ACTIVITIES),
+            "my_activities" : my_activities,
+            "genders" : getChoices(GENDERS),
+            "number_items" : NUMBERS_ITEMS
+        })
+    elif request.method =="POST":
+        body = request.POST
+        print(body)
+
+        search = re.split(', | - ', body['search'])
+        date = body["date"]
+        month = date.split("-")[1]
+        day = date.split("-")[2]
+        if (month == "12" or month == "01" or month == "02" or month == "03"):
+            season = "Winter"
+        elif(month == "04" or month == "05"):
+            season = "Spring"
+        elif(month == "06" or month == "07" or month == "08" or month == "09"):
+            season = "Summer"
+        elif(month == "10" or month == "11"):
+            season = "Fall"
+        number_items = int(body["number_items"])
+        trip.city=search[0].title()
+        trip.country=search[-1].title()
+        trip.date=date
+        trip.season=season.title()
+        trip.number_items=number_items
+        trip.save()
+        
+        older_travelers = Traveler.objects.filter(trip_id=trip.id)
+        for traveler in older_travelers:
+            traveler.delete()
+
+        if body.getlist("name"):
+            new_names = body.getlist("name")
+            new_ages = body.getlist("age")
+            new_genders = body.getlist("gender")
+            for i in range(len(new_names)):
+                traveler = Traveler.objects.create(
+                    trip=trip,
+                    name=new_names[i],
+                    gender=new_genders[i],
+                    age=new_ages[i]
+                )
+        
+        new_activities = body.getlist("activities")
+        old_activities = Activity.objects.filter(trip_id=trip.id)
+        for activity in old_activities:
+            if activity.activity in new_activities:
+                new_activities.remove(activity.activity)
+            else:
+                delete_activity = Activity.objects.get(trip_id=trip.id, activity=activity.activity)
+                delete_activity.delete()
+        
+        for new_activity in new_activities:
+            activity = Activity.objects.create(
+                trip=trip,
+                activity=new_activity,
+            )
+        return redirect("/trip/%s/" % (trip.id))
+
 
 @login_required
 def delete_trip(request, trip_id):
-    pass
+    trip = Trip.objects.get(id=trip_id)
+    trip.delete()
+    return redirect("/")
 
 @login_required
 def add_item(request, trip_id):
     body = request.POST
-    print(body)
     trip = Trip.objects.get(id=trip_id)
     new_item = Item.objects.create(
         name=body['name'],

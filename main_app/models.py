@@ -45,6 +45,25 @@ CATEGORIES = (
     ("OT", "Other"),
 )
 
+NUMBERS_ITEMS = [{
+        "name" : "Light",
+        "text_1" : "Less than 10 items",
+        "num" : 10,
+        "id" : "number_items_light"
+    },{
+        "name" : "Medium",
+        "text_1" : "10 - 15",
+        "text_2" : "items",
+        "num" : 15,
+        "id" : "number_items_medium"
+    }, {
+        "name" : "Heavy",
+        "text_1" : "15 - 20",
+        "text_2" : "items",
+        "num" : 20,
+        "id" : "number_items_heavy"
+    }]
+
 
 class Item(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
