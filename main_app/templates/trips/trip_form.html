@@ -3,12 +3,20 @@
 {% load static %}
 
 <div class="container px-4" id="mobile-container">
-  <form method="POST" action="{% url 'new_trip' %}">
+  {% if edit %}
+    <form method="POST" action="{% url 'edit_trip' trip.id %}">
+  {% else %}
+    <form method="POST" action="{% url 'new_trip' %}">
+  {% endif %}
     {% csrf_token %}
     <div class="mt-4">
       <label for="searchTextField" class="form-label text-header">Where are you going?</label>
       <div class="input-group input-group-sm mb-3">
-        <input type="search" class="form-control" name="search" value="{{ trip.city }}, {{ trip.country}}" id="searchTextField" required>
+        {% if edit %}
+          <input type="search" class="form-control" name="search" value="{{ trip.city }}, {{ trip.country}}" id="searchTextField" required>
+        {% else %}
+          <input type="search" class="form-control" name="search" id="searchTextField" required>
+        {% endif %}
       </div>
     </div>
     <div class="mt-4">
@@ -36,7 +44,7 @@
           </div>
         </li>
         {% for traveller in travellers %}
-        <li class="my-1 ps-2" id="traveller-template">
+        <li class="my-1 ps-2">
           <div class="d-flex">
             <div class="input-group input-group-sm">
               <input type="text" name="name" placeholder="Name" class="form-control" value="{{ traveller.name }}" required>
@@ -59,7 +67,6 @@
           </div>
         </li>
         {% endfor %}
-        {% if travellers == false %}
         <li class="my-1 ps-2" id="traveller-template">
           <div class="d-flex">
             <div class="input-group input-group-sm">
@@ -79,7 +86,6 @@
             </div>
           </div>
         </li>
-        {% endif %}
       </ol>
     </div>
     <div class="text-center">
@@ -90,20 +96,22 @@
     <div class="mt-4">
       <label for="number_items" class="form-label text-header">How much do you want to pack?</label>
       <div class="row g-3">
+        {% for number_item in number_items%}
         <div class="col-4 ">
-          <label class="card card-shadow card-packing" for="number_items_light">
-            <input type="radio" class="btn-check" name="number_items" value="10" id="number_items_light">
+          <label class="card card-shadow card-packing {% if number_item.num == trip.number_items %} card-packing-active {% endif %}" for="number_items_light">
+            <input type="radio" class="btn-check" name="number_items" value="{{ number_item.num}}" id="{{ number_items.id }}">
             <div class="card-body p-2 text-center">
               <div>
-                <text class="text-card-title">Light</text>
+                <text class="text-card-title">{{ number_item.name}}</text>
               </div>
               <div>
-                <text class="text-card-normal">Less than 10 items</text>
+                <text class="text-card-normal">{{ number_item.text_1 }} {% if number_item.text_2 %} <br>{{ number_item.text_2 }} {% endif %}</text>
               </div>
             </div>
           </label>
         </div>
-        <div class="col-4">
+        {% endfor %}
+        {% comment %} <div class="col-4">
           <label class="card card-shadow card-packing card-packing-active" for="number_items_medium">
             <input type="radio" class="btn-check" name="number_items" value="15" id="number_items_medium" checked>
             <div class="card-body p-2 text-center">
@@ -130,16 +138,20 @@
           </label>
         </div>
       </div>
-    </div>
+    </div> {% endcomment %}
     <div class="mt-4">
       <label for="number_items" class="form-label text-header">What will you be doing there?</label>
       <div class="row g-3">
         {% for activity in activities %}
         {% if activity != "All" %}
         <div class="col-4">
+          {% if activity in my_activities %}
+          <label class="card card-shadow card-activity card-activity-active" for="activity-{{ activity }}">
+            <input type="checkbox" class="btn-check" name="activities" value="{{ activity }}" id="activity-{{ activity }}" checked>
+          {% else %}
           <label class="card card-shadow card-activity" for="activity-{{ activity }}">
-            <input type="checkbox" class="btn-check" name="activities" value="{{ activity }}"
-              id="activity-{{ activity }}">
+            <input type="checkbox" class="btn-check" name="activities" value="{{ activity }}" id="activity-{{ activity }}">
+          {% endif %}
             <div class="card-body p-1 d-flex flex-column justify-content-center align-items-center">
               <text class="text-activities align-middle">{{ activity }}</text>
             </div>
@@ -149,14 +161,32 @@
         {% endfor %}
       </div>
     </div>
-    <div class="d-grid mt-2">
-      <button type="submit" class="btn rounded-pill py-2 mt-4 button-shadow button-primary">
-        <text class="text-card-title">Generate List</text>
+    {% if edit %}
+    <div class="row justify-content-around">
+      <div class="col-6 mt-4">
+        <a href="{% url "delete_trip" trip.id %}">
+          <div class="card card-shadow border-0 mb-4 button-hover">
+            <div class="card-body p-1 text-center">
+              <text class="text-card-title">Delete Trip</text>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div class="col-6 ">
+      <button type="submit" class="btn button-fit rounded-pill py-1 mt-4 button-shadow button-primary">
+        <text class="text-card-title">Save Changes</text>
       </button>
+      </div>
     </div>
+    {% else %}
+    <button type="submit" class="col-12 btn rounded-pill py-2 mt-4 button-shadow button-primary">
+      <text class="text-card-title">Generate List</text>
+    </button>
+    {% endif%}
   </form>
+</div>
 
-  <script defer type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.exp&key=AIzaSyABt5_xdXjRl4pFDKfdUtAM4Bv5lgt1vo8&libraries=places"></script>
-  <script defer type="text/javascript" src="/static/javascript/trip_form.js"></script>
+<script defer type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.exp&key=AIzaSyABt5_xdXjRl4pFDKfdUtAM4Bv5lgt1vo8&libraries=places"></script>
+<script defer type="text/javascript" src="/static/javascript/trip_form.js"></script>
 
-  {% endblock %}
+{% endblock %}
