@@ -3,7 +3,7 @@
 {% load static %}
   <div class="container px-4" id="mobile-container">
     {% if add_item %}
-    <form method='POST' action='{% url "trip" trip.id %}'>
+    <form method='POST' action='{% url "add_item" trip.id %}'>
     {% else %} 
     <form method='POST' action='{% url "item" trip.id item.id %}'>
     {% endif %}

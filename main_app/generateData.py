@@ -1,8 +1,8 @@
 import random
 from .models import Item, Vote, SEASONS, ACTIVITIES, AGES, GENDERS, CATEGORIES, getChoices
 from django.contrib.auth.models import User
-from .static.data.places import select_cities, cities
-from .static.data.items import item_names
+from .static.data.places import select_cities, cities, presentation_cities
+from .static.data.items import item_names, categorized_items
 from .static.data.people import first_names, last_names
 
 
@@ -16,17 +16,21 @@ category_choices = getChoices(CATEGORIES)
 def generateItemData(n):
     data = []
     for i in range(n):
-        random_city = select_cities[random.randint(0, len(select_cities)-1)]
+        random_city = presentation_cities[random.randint(0, len(presentation_cities)-1)]
+
+        random_category = category_choices[random.randint(0, len(category_choices)-1)]
+        category_list = categorized_items[random_category]
+        random_item = category_list[random.randint(0, len(category_list)-1)]
 
         item = Item.objects.create(
-            name=item_names[random.randint(0, len(item_names)-1)].title(),
+            name=random_item.title(),
             city=random_city["City"].title(),
             country=random_city["Country"].title(),
             season=season_choices[random.randint(0, len(season_choices)-1)].title(),
             activity=activity_choices[random.randint(0, len(activity_choices)-1)].title(),
             age=age_choices[random.randint(0, len(age_choices)-1)].title(),
             gender=gender_choices[random.randint(0, len(gender_choices)-1)].title(),
-            category=category_choices[random.randint(0, len(category_choices)-1)].title(),
+            category=random_category,
             trip_id=None
         )
         item.save()
