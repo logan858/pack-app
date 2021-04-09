@@ -165,7 +165,7 @@
     </div>
   {% endif %}
 {% endif %}
-<br>
+{% comment %} {% if num_trips < 3 %}
 <div class="container px-4" id="mobile-container">
   <form method="POST" action="{% url 'index_search' %}">
     {% csrf_token %}
@@ -181,7 +181,7 @@
     </div>
   </form>
 </div>
-<br>
+{% endif %} {% endcomment %}
 
 <script defer type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.exp&key=AIzaSyABt5_xdXjRl4pFDKfdUtAM4Bv5lgt1vo8&libraries=places"></script>
 <script defer type="text/javascript" src="/static/javascript/trip_form.js"></script>

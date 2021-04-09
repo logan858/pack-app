@@ -53,8 +53,9 @@
                 <option value="{{ traveller.gender }}" selected>{{ traveller.gender }}</option>
                 {% for gender in genders %}
                   {% if traveller.gender == gender %}
+                    <option value="{{ gender }}" selected>{{ gender}}</option>
                   {% else %}
-                  <option value="{{ gender }}">{{ gender}}</option>
+                    <option value="{{ gender }}">{{ gender}}</option>
                   {% endif %}
                 {% endfor %}
               </select>
@@ -98,8 +99,13 @@
       <div class="row g-3">
         {% for number_item in number_items%}
         <div class="col-4 ">
-          <label class="card card-shadow card-packing {% if number_item.num == trip.number_items %} card-packing-active {% endif %}" for="number_items_light">
+          {% if number_item.num == trip.number_items %}
+          <label class="card card-shadow card-packing card-packing-active" for="number_items_light">
+            <input type="radio" class="btn-check" name="number_items" value="{{ number_item.num}}" id="{{ number_items.id }}" checked>
+          {% else %}
+          <label class="card card-shadow card-packing " for="number_items_light">
             <input type="radio" class="btn-check" name="number_items" value="{{ number_item.num}}" id="{{ number_items.id }}">
+          {% endif %}
             <div class="card-body p-2 text-center">
               <div>
                 <text class="text-card-title">{{ number_item.name}}</text>
@@ -111,34 +117,6 @@
           </label>
         </div>
         {% endfor %}
-        {% comment %} <div class="col-4">
-          <label class="card card-shadow card-packing card-packing-active" for="number_items_medium">
-            <input type="radio" class="btn-check" name="number_items" value="15" id="number_items_medium" checked>
-            <div class="card-body p-2 text-center">
-              <div>
-                <text class="text-card-title">Medium</text>
-              </div>
-              <div>
-                <text class="text-card-normal">10 - 15<br>items</text>
-              </div>
-            </div>
-          </label>
-        </div>
-        <div class="col-4">
-          <label class="card card-shadow card-packing" for="number_items_heavy">
-            <input type="radio" class="btn-check" name="number_items" value="20" id="number_items_heavy" checked>
-            <div class="card-body p-2 text-center">
-              <div>
-                <text class="text-card-title">Heavy</text>
-              </div>
-              <div>
-                <text class="text-card-normal">15 - 20<br>items</text>
-              </div>
-            </div>
-          </label>
-        </div>
-      </div>
-    </div> {% endcomment %}
     <div class="mt-4">
       <label for="number_items" class="form-label text-header">What will you be doing there?</label>
       <div class="row g-3">
