@@ -24,8 +24,8 @@ Create & add your own items, then submit them to the community for up/down-votin
 * [Pack'D Official Site](https://packd-app.herokuapp.com/)
 
 ## Future Enhancements
-* Add expanded filtering capabilities along age, gender, etc
-* Add profile pics, and photo uploads for past trips 
+* Add expanded filtering capabilities along with age, gender, etc. Specifically, we want to improve the search function for locations.
+* Add profile pics, and photo uploads for past trips .
 
 ## Technologies Used
 * Django
