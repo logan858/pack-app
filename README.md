@@ -5,6 +5,11 @@
 * [Daniel Tamunotonye](https://github.com/thurnye)
 * [Logan Major](https://github.com/logan858)
 
+## Design Team
+* [Marielle Lacea]()
+* [Mike Lown]()
+* [Shirley Lam]()
+
 ## Description
 Pack'D is a webapp designed to help absent-minded vacationers get organized! Search by location to return item results pertaining to the destinations. Curate your results by their popularity, destination, season, type of travel, activities, and more!
 
