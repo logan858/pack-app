@@ -16,15 +16,7 @@ Pack'D is a webapp designed to help absent-minded vacationers get organized! Sea
 Create & add your own items, then submit them to the community for up/down-voting, while you vote on other community items based on their own merits.  
 
 ## Screens
-<img src="https://github.com/logan858/pack-app/blob/master/main_app/static/images/screenshots/landing_page.png?raw=true" width="35%"> 
-<img src="https://github.com/logan858/pack-app/blob/master/main_app/static/images/screenshots/homepage_1.png?raw=true" width="35%"> 
-<img src="https://github.com/logan858/pack-app/blob/master/main_app/static/images/screenshots/sign_up.png?raw=true" width="35%"> 
-<img src="https://github.com/logan858/pack-app/blob/master/main_app/static/images/screenshots/add_trip_city.png?raw=true" width="35%"> 
-<img src="https://github.com/logan858/pack-app/blob/master/main_app/static/images/screenshots/add_trip_activities.png?raw=true" width="35%"> 
-<img src="https://github.com/logan858/pack-app/blob/master/main_app/static/images/screenshots/details.png?raw=true" width="35%"> 
-<img src="https://github.com/logan858/pack-app/blob/master/main_app/static/images/screenshots/homepage_2.png?raw=true" width="35%"> 
-<img src="https://github.com/logan858/pack-app/blob/master/main_app/static/images/screenshots/erd.png?raw=true" width="35%"> 
-<img src="https://github.com/logan858/pack-app/blob/master/main_app/static/images/RM-titlescreen.png?raw=true" width="35%"> <img src="https://github.com/logan858/pack-app/blob/master/main_app/static/images/RM-mainscreen.png?raw=true" width="35%">
+<img src="https://github.com/logan858/pack-app/blob/master/main_app/static/images/screenshots/landing_page.png?raw=true" width="35%"> <img src="https://github.com/logan858/pack-app/blob/master/main_app/static/images/screenshots/homepage_1.png?raw=true" width="35%"> <img src="https://github.com/logan858/pack-app/blob/master/main_app/static/images/screenshots/sign_up.png?raw=true" width="35%"> <img src="https://github.com/logan858/pack-app/blob/master/main_app/static/images/screenshots/add_trip_city.png?raw=true" width="35%"> <img src="https://github.com/logan858/pack-app/blob/master/main_app/static/images/screenshots/add_trip_activities.png?raw=true" width="35%"> <img src="https://github.com/logan858/pack-app/blob/master/main_app/static/images/screenshots/details.png?raw=true" width="35%"> <img src="https://github.com/logan858/pack-app/blob/master/main_app/static/images/screenshots/homepage_2.png?raw=true" width="35%"> <img src="https://github.com/logan858/pack-app/blob/master/main_app/static/images/screenshots/erd.png?raw=true" width="35%"> <img src="https://github.com/logan858/pack-app/blob/master/main_app/static/images/RM-titlescreen.png?raw=true" width="35%"> <img src="https://github.com/logan858/pack-app/blob/master/main_app/static/images/RM-mainscreen.png?raw=true" width="35%">
 <br>
 <img src="https://github.com/logan858/pack-app/blob/master/main_app/static/images/RM-tripscreen.png?raw=true" width="35%"> <img src="https://github.com/logan858/pack-app/blob/master/main_app/static/images/RM-itemscreen.png?raw=true" width="35%">
 
