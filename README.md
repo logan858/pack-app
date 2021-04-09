@@ -17,8 +17,8 @@ Create & add your own items, then submit them to the community for up/down-votin
 
 ## Screens
 <img src="https://github.com/logan858/pack-app/blob/master/main_app/static/images/screenshots/landing_page.png?raw=true" width="33%"> <img src="https://github.com/logan858/pack-app/blob/master/main_app/static/images/screenshots/homepage_1.png?raw=true" width="33%"> <img src="https://github.com/logan858/pack-app/blob/master/main_app/static/images/screenshots/sign_up.png?raw=true" width="33%">
-<img src="https://github.com/logan858/pack-app/blob/master/main_app/static/images/screenshots/add_trip_city.png?raw=true" width="33%"> <img src="https://github.com/logan858/pack-app/blob/master/main_app/static/images/screenshots/details.png?raw=true" width="33%"> <img src="https://github.com/logan858/pack-app/blob/master/main_app/static/images/screenshots/homepage_2.png?raw=true" width="33%"> <img src="https://github.com/logan858/pack-app/blob/master/main_app/static/images/screenshots/erd.png?raw=true" width="99%">
-<img src="https://github.com/logan858/pack-app/blob/master/main_app/static/images/RM-titlescreen.png?raw=true" width="33%"> <img src="https://github.com/logan858/pack-app/blob/master/main_app/static/images/RM-mainscreen.png?raw=true" width="33%">
+<img src="https://github.com/logan858/pack-app/blob/master/main_app/static/images/screenshots/add_trip_city.png?raw=true" width="33%"> <img src="https://github.com/logan858/pack-app/blob/master/main_app/static/images/screenshots/details.png?raw=true" width="33%"> <img src="https://github.com/logan858/pack-app/blob/master/main_app/static/images/screenshots/homepage_2.png?raw=true" width="33%"> <img src="https://github.com/logan858/pack-app/blob/master/main_app/static/images/screenshots/erd.png?raw=true" width="100%">
+
 
 ## Link
 * [Pack'D Official Site](https://packd-app.herokuapp.com/)
