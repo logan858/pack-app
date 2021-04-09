@@ -25,6 +25,7 @@ Create & add your own items, then submit them to the community for up/down-votin
 
 ## Future Enhancements
 * Add expanded filtering capabilities along with age, gender, etc. Specifically, we want to improve the search function for locations.
+* Generate proper items for each category to give user a launchpad.
 * Add profile pics, and photo uploads for past trips .
 
 ## Technologies Used
