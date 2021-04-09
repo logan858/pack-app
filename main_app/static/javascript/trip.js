@@ -72,12 +72,9 @@ function changeScore(id, num) {
     http.send(json_upload);
 }
 
-
-
 const activityCards = document.querySelectorAll(".card-activity");
 activityCards.forEach(item => {
     item.addEventListener("click", e => {
-        e.preventDefault();
         let target = e.target
         let rightTarget = false;
         while (!rightTarget) {
@@ -87,48 +84,17 @@ activityCards.forEach(item => {
                 target = target.parentElement
             }
         }
+        target.classList.add("card-activity-active");
+        target.children[0].checked = true;
 
-        if (target.classList.contains("card-activity-active") == false) {
-            target.classList.add("card-activity-active");
-            target.children[0].checked = true;
-            return true
-        } else {
-            target.classList.remove("card-activity-active")
-            target.children[0].checked = false;
+        const parent = target.parentElement;
+        const grandparent = parent.parentElement
+        for (let i = 0; i < grandparent.children.length; i++) {
+            const uncle = grandparent.children[i]
+            if (uncle != parent && uncle.children[0].classList.contains("card-activity-active")) {
+                uncle.children[0].classList.remove("card-activity-active")
+                uncle.children[0].children[0].checked = false
+            }
         }
     })
 })
-
-
-/*
- $(".upvote-btn").submit(function (e) {
-        let target = document.activeElement
-        e.preventDefault();
-        let serializedData = $(this).serialize();
-        if (target.className === 'upvote') {
-            $.ajax({
-                type: "POST",
-                url: "{% url 'upvote_system' %}",
-                data: serializedData,
-                success: function (response) {
-                    target.style.color = "red"
-                },
-                error: function (response) {
-                    alert(response["responseJSON"]["error"]);
-                }
-            })
-        } else if (target.className === 'downvote') {
-            $.ajax({
-                type: "POST",
-                url: "{% url 'downvote_system' %}",
-                data: serializedData,
-                success: function (response) {
-                    target.style.color = "blue"
-                },
-                error: function (response) {
-                    alert(response["responseJSON"]["error"]);
-                }
-            })
-        }
-    })
-    */

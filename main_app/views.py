@@ -22,23 +22,27 @@ import ast
 
 
 def home(request):
-    trips = []
-    my_trips = Trip.objects.filter(user_id=request.user.id)
-    past_trips = False
-    today = date.today()
-    for my_trip in my_trips:
-        if my_trip.date < today:
-            past_trips = True
-        trips.append({
-            "trip": my_trip,
-            "travelers": Traveler.objects.filter(trip_id=my_trip)
-        })
-    trips.reverse()
+    if request.user.is_authenticated:
+        trips = []
+        my_trips = Trip.objects.filter(user_id=request.user.id)
+        past_trips = False
+        today = date.today()
+        for my_trip in my_trips:
+            if my_trip.date < today:
+                past_trips = True
+            trips.append({
+                "trip": my_trip,
+                "travelers": Traveler.objects.filter(trip_id=my_trip)
+            })
+        trips.reverse()
 
-    return render(request, 'index.html', {
-        "trips": trips[:3],
-        "past_trips": past_trips,
-    })
+        return render(request, 'index.html', {
+            "trips": trips[:3],
+            "past_trips": past_trips,
+            "num_trips" :len(trips)
+        })
+    else:
+        return redirect("accounts/login/")
 
 @user_passes_test(lambda u: u.is_anonymous, '/')
 def signup(request):
@@ -244,6 +248,7 @@ def edit_trip(request, trip_id):
         
         print(my_activities)
         return render(request, "trips/trip_form.html", {
+            "title" : "Edit Trip",
             "edit" : True,
             "trip": trip,
             "travellers": travelers,
@@ -268,6 +273,7 @@ def edit_trip(request, trip_id):
             season = "Summer"
         elif(month == "10" or month == "11"):
             season = "Fall"
+        print(body["number_items"])
         number_items = int(body["number_items"])
         trip.city=search[0].title()
         trip.country=search[-1].title()
@@ -337,28 +343,26 @@ def add_item(request, trip_id):
 def item(request, trip_id, item_id):
     trip = Trip.objects.get(id=trip_id)
     item = Item.objects.get(id=item_id)
-    print(trip, item)
-    return render(request, "items/view_item.html", {
-        "trip": trip,
-        "item": item,
-        "categories": getChoices(CATEGORIES),
-        "seasons" : getChoices(SEASONS),
-        "ages" : getChoices(AGES),
-        "genders" : getChoices(GENDERS),
-        "activities": getChoices(ACTIVITIES),
-    })
-
-def edit_item(request, trip_id, item_id):
-    trip = Trip.objects.get(id=trip_id)
-    item = Item.objects.get(id=item_id)
-    item.name = request.POST["name"]
-    item.category = request.POST["category"]
-    item.season = request.POST["season"]
-    item.age = request.POST["age"]
-    item.gender = request.POST["gender"]
-    item.activity = request.POST["activities"]
-    item.save()
-    return redirect("/trip/%s/" % (trip.id))
+    if request.method == "GET":
+        return render(request, "items/item.html", {
+            "title" :"Edit Item",
+            "trip": trip,
+            "item": item,
+            "categories": getChoices(CATEGORIES),
+            "seasons" : getChoices(SEASONS),
+            "ages" : getChoices(AGES),
+            "genders" : getChoices(GENDERS),
+            "activities": getChoices(ACTIVITIES),
+        })
+    elif request.method =="POST":
+        item.name = request.POST["name"]
+        item.category = request.POST["category"]
+        item.season = request.POST["season"]
+        item.age = request.POST["age"]
+        item.gender = request.POST["gender"]
+        item.activity = request.POST["activities"]
+        item.save()
+        return redirect("/trip/%s/" % (trip.id))
 
 def delete_item(request, trip_id, item_id):
     trip = Trip.objects.get(id=trip_id)

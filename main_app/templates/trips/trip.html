@@ -127,7 +127,7 @@
       {% for category, items in categorized_items.items %}
       {% if items|length > 0 %}
       <div>
-        <hr class="my-1" />
+        <hr class="my-1"/>
         <div class="d-flex pt-1">
           <text class="text-normal-bold me-auto">{{ category }}</text>
           <text class="text-normal ms-auto" id="{{ category }}-checks">0</text>
@@ -143,23 +143,10 @@
             {% else %}
               <input class="form-check-input" type="checkbox" id="flexCheckDefault">
             {% endif %}
-            <label class="form-check-label text-personal" for="flexCheckDefault">{{ item.item.name|title }}</label>
-            <!-- EDIT ITEMSSSS-->
-            <form method="POST" action="{% url 'item' trip.id item.item.id %}">
-              {% csrf_token %}
-              <button type="submit">Edit</button>
-            </form>
-            <!-- done -->
-          </div>
-          {% comment %} <div class="ms-0 me-auto">
-            <a>
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                class="bi bi-three-dots" viewBox="0 0 16 16">
-                <path
-                  d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z" />
-              </svg>
+            <a href="{% url 'item' trip.id item.item.id %}">
+              <text class="form-check-label text-personal" for="flexCheckDefault">{{ item.item.name|title }}</text>
             </a>
-          </div> {% endcomment %}
+          </div>
           {% else %}
           <div class="me-auto">
             <input class="form-check-input" type="checkbox" id="flexCheckDefault">

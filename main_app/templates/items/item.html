@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+  <a href="{{ previous_url.url }}">
+    <div class="mt-4 px-4">
+      <svg width="12" height="21" viewBox="0 0 12 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M9.60938 20.3906C9.86719 20.6484 10.1953 20.7891 10.582 20.7891C11.3555 20.7891 11.9766 20.1797 11.9766 19.4062C11.9766 19.0195 11.8125 18.668 11.543 18.3984L3.33984 10.3828L11.543 2.39062C11.8125 2.12109 11.9766 1.75781 11.9766 1.38281C11.9766 0.609375 11.3555 0 10.582 0C10.1953 0 9.86719 0.140625 9.60938 0.398438L0.492188 9.30469C0.164062 9.60938 0.0117188 9.98438 0 10.3945C0 10.8047 0.164062 11.1562 0.492188 11.4727L9.60938 20.3906Z" fill="#16056B"/>
+      </svg>
+      <text class="text-header ms-1 align-middle">{{ trip.city }}, {{ trip.country}}</text>
+    </div>
+  </a>
+  <div class="container px-4" id="mobile-container">
+    <form method='POST' action='{% url "item" trip.id item.id %}'>
+      {% csrf_token %}
+      <div class="row g-3 mt-4">
+        <div class="col-12">
+          <div class="input-group-sm mb-3">
+            <label for="name" class="form-label text-header">Item Name</label>
+            <input type="text" class="form-control" name="name" value="{{ item.name}}" required>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="input-group-sm mb-3">
+            <label for="category" class="form-label text-header">Category</label>
+            <select type="select" class="form-select form-select-sm px-2" name="category" id="category" required>
+              <option value="" disabled selected>Select Option</option>
+              {% for category in categories  %}
+                {% if item.category == category %}
+                  <option value="{{ category }}" selected>{{ category }}</option>
+                {% else %}
+                  <option value="{{ category }}">{{ category }}</option>
+                {% endif %}
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="input-group-sm mb-3">
+            <label for="season" class="form-label text-header">Season</label>
+            <select type="select" class="form-select form-select-sm px-2" name="season" id="season">
+              {% for season in seasons %}
+                {% if item.season == season %}
+                  <option value="{{ season}}" selected>{{ season}}</option>
+                {% else %}
+                  <option value="{{ season}}">{{ season}}</option>
+                {% endif %}
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="input-group-sm mb-3">
+            <label for="age" class="form-label text-header">Age Group</label>
+            <select type="select" class="form-select form-select-sm px-2" name="age" id="age">
+              {% for age in ages %}
+                {% if item.age == age %}
+                  <option value="{{ age }}">{{ age }}</option>
+                {% else %}
+                  <option value="{{ age }}">{{ age }}</option>
+                {% endif %}
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="input-group-sm mb-3">
+            <label for="gender" class="form-label text-header">Gender</label>
+            <select type="select" class="form-select form-select-sm px-2" name="gender" id="gender">
+              {% for gender in genders %}
+              <option value="{{ gender }}">{{ gender }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+        <div class="col-12">
+          <label for="activities" class="form-label text-header">Activities</label>
+          <div class="row g-3">
+            {% for activity in activities %}
+              {% if activity != "All" %}
+                <div class="col-4">
+                  {% if item.activity == activity %}
+                  <label class="card card-shadow card-activity card-activity-active" for="activity-{{ activity }}">
+                    <input type="checkbox" class="btn-check" name="activities" value="{{ activity }}" id="activity-{{ activity }}" checked>
+                  {% else %}
+                  <label class="card card-shadow card-activity" for="activity-{{ activity }}">
+                    <input type="checkbox" class="btn-check" name="activities" value="{{ activity }}" id="activity-{{ activity }}">
+                  {% endif %}
+                    <div class="card-body p-1 d-flex flex-column justify-content-center align-items-center">
+                    <text class="text-activities align-middle">{{ activity }}</text>
+                  </div>
+                  </label>
+                </div>
+              {% endif %}
+            {% endfor %}      
+          </div>
+        </div>
+      </div>
+      <div class="row justify-content-around">
+      <div class="col-6 mt-4">
+        <a href="{% url "delete_item" trip.id item.id %}">
+          <div class="card card-shadow border-0 mb-4 button-hover">
+            <div class="card-body p-1 text-center">
+              <text class="text-card-title">Delete Item</text>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div class="col-6 ">
+        <button type="submit" class="btn button-fit rounded-pill py-1 mt-4 button-shadow button-primary">
+          <text class="text-card-title">Save Changes</text>
+        </button>
+      </div>
+    </div>
+    </form>
+  </div>
+  
+<script src="/static/javascript/trip.js"></script>
+{% endblock %}
