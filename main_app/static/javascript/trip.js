@@ -1,3 +1,36 @@
+const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value
+const checkboxes = document.querySelectorAll(".item-checkbox");
+
+checkboxes.forEach(item => {
+    item.addEventListener("click", e => {
+        const target = e.target
+        const id = target.getAttribute("name")
+        const value = target.checked
+        changeCheckbox(id, value)
+    })
+})
+
+function changeCheckbox(id, value) {
+    const trip_id = document.querySelector("#trip_id").value;
+    const url = "/api/checkbox"
+    if (value) {
+        value = 1;
+    } else if (!value) {
+        value = 0
+    }
+    
+    const json_upload = JSON.stringify({
+        "trip_id" : trip_id,
+        "vote_id" : id,
+        "value" : value
+    });
+    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value
+    const http = new XMLHttpRequest();
+    http.open("POST", url, true);
+    http.setRequestHeader('X-CSRFToken', csrftoken);
+    http.send(json_upload);
+}
+
 const scores = document.querySelectorAll(".score");
 const scoreUp = document.querySelectorAll(".score-up");
 const scoreDown = document.querySelectorAll(".score-down");
@@ -18,7 +51,6 @@ scores.forEach(item => {
             down : "score-down-post"
         }
         const name = score.getAttribute("name");
-        console.log(score)
         if (target.classList.contains("score-up")) {
             if (up.classList.contains(classNames.up)) {
                 up.classList.remove(classNames.up)
@@ -59,13 +91,11 @@ scores.forEach(item => {
 function changeScore(id, num) {
     const trip_id = document.querySelector("#trip_id").value;
     const url = "/api/vote"
-    console.log(num)
     const json_upload = JSON.stringify({
         "trip_id" : trip_id,
         "item_id" : id,
         "change_value" : num.toString()
     });
-    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value
     const http = new XMLHttpRequest();
     http.open("POST", url, true);
     http.setRequestHeader('X-CSRFToken', csrftoken);

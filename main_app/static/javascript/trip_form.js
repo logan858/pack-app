@@ -14,41 +14,32 @@ let travellerTemplate = document.querySelector("#traveller-template");
 let removeTravellerButtons = document.querySelectorAll(".remove-traveller-button")
 
 addTravellerButton.addEventListener("click", e => {
+    e.preventDefault();
     const clone = travellerTemplate.cloneNode(true);
     clone.removeAttribute("id");
     clone.querySelectorAll("input").forEach(input => {
         input.value="";
     })
     travellersList.appendChild(clone)
-    removeButtons();
+    reinitializeButtons()
 })
 
-document.querySelector(".remove-traveller-button").addEventListener("click", e => {
-    e.preventDefault();
+function reinitializeButtons() {
     removeTravellerButtons = document.querySelectorAll(".remove-traveller-button");
-    removeButtons()
-})
-
-function removeButtons() {
     removeTravellerButtons.forEach(removeTravellerButton => {
         removeTravellerButton.addEventListener("click", e => {
-            e.preventDefault();
-            const target = e.target
-            if (target == removeTravellerButton) {
-                let removed = false
-                let parent = target.parentElement
-                while (removed == false) {
-                    if (parent.nodeName == "LI" ) {
-                        parent.remove();
-                        removed = true
-                    } else {
-                        parent = parent.parentElement
-                    }
-                }
-            }
+            const target = e.target.closest(".traveller-li");
+            target.remove();
         })
     })
-}
+};
+
+removeTravellerButtons.forEach(removeTravellerButton => {
+    removeTravellerButton.addEventListener("click", e => {
+        const target = e.target.closest(".traveller-li");
+        target.remove();
+    })
+})
 
 const packingCards = document.querySelectorAll(".card-packing");
 packingCards.forEach(item => {
