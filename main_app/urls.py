@@ -15,11 +15,8 @@ urlpatterns = [
     path("trip/<int:trip_id>/item/add/", views.add_item, name="add_item"),
     path("trip/<int:trip_id>/item/<int:item_id>/", views.item, name="item"),
     path("trip/<int:trip_id>/item/<int:item_id>/delete/", views.delete_item, name="delete_item"),
-
-
     path("trip/upcoming/", views.upcoming_trips, name="upcoming_trips"),
     path("trip/pasts/", views.past_trips, name="past_trips"),
-
 
     path("index_search/", views.index_search, name="index_search"),
     path("profile/<int:user_id>/", views.profile, name="profile"),
@@ -29,6 +26,8 @@ urlpatterns = [
     path('create', views.create, name="create"),
 
     path("api/vote", views.vote, name="vote"),
+    path("api/checkbox", views.checkbox, name="checkbox"),
+
 
     path('findcity/', views.find_city, name="findcity"),
     path('findcity/results', views.results, name='results'),
