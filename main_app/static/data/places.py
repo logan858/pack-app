@@ -1,3 +1,19 @@
+presentation_cities = [
+ {
+   "City": "Seoul",
+   "Country": "South Korea"
+ },
+  {
+   "City": "Toronto",
+   "Country": "Canada"
+ },
+  {
+   "City": "Manila",
+   "Country": "Philippines"
+ },
+]
+
+
 select_cities = [
  {
    "City": "Sydney",

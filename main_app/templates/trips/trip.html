@@ -1,6 +1,8 @@
 {% extends 'base.html' %}
 {% block content %}
 {% load static %}
+
+{% csrf_token %}
 <div class="container px-4 multi-collapse show" id="mobile-container" aria-expanded="true">
   <div class="card card-shadow border-0 mt-4 weather-card" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
     <div class="card-body text-center">
