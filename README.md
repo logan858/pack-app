@@ -39,3 +39,15 @@ Create & add your own items, then submit them to the community for up/down-votin
 * [Trello Board](https://trello.com/b/Z1liPaey/packd)
 * [Wireframes](https://www.figma.com/file/2PoNMUg2fwZbZ4VwMEjykV/Pack'D?node-id=12%3A36)
 * [User Stories](https://www.canva.com/design/DAEazvT3As0/b9WaIulWfGE2-kPRzvvSkg/edit#1)
+
+## Reflection
+Design:
+1. The design team created over 10 cohesive prototype pages with a mobile-first approach.
+2. The final products are extremely similar to the wireframes.
+
+Techicals: 
+1. AJAX http requests were used to allow users to make changes to their trips without worrying about saving it as seen in the voting and checkbox elements. 
+2. We also utilized the Google Maps API and The Visual Weather API to create a better user experience. 
+
+Conclusion:
+We were able both our design and technical goals that we initally laid out for ourselves.
