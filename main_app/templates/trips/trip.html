@@ -1,6 +1,8 @@
 {% extends 'base.html' %}
 {% block content %}
 {% load static %}
+
+{% csrf_token %}
 <div class="container px-4 multi-collapse show" id="mobile-container" aria-expanded="true">
   <div class="card card-shadow border-0 mt-4 weather-card" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
     <div class="card-body text-center">
@@ -42,10 +44,10 @@
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="staticBackdropLabel">{{trip.city}}, {{trip.country}} <span class="text-muted" style="font-size: 12px;font-style: italic;"> ....15 days weather forecast</span></h5>
+          <h5 class="modal-title" id="staticBackdropLabel">{{trip.city}}, {{trip.country}} &nbsp;<span class="text-muted" style="font-size: 12px;font-style: italic;">15 Day Forecast</span></h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <div class="modal-body">
+        <div class="modal-body p-0">
           <div class="accordion accordion-flush" id="accordionFlushExample">
             {% for el in forecast %}
             <div class="accordion-item">
@@ -118,54 +120,89 @@
     <div class="card-body">
       <div class="card-title d-flex">
         <div class="me-auto">
-          <text class="text-header me-auto">Packing List</text>
+          <text class="text-header me-auto">Travellers</text>
         </div>
         <div class="ms-auto">
           <a class="text-header" href="{% url 'edit_trip' trip.id %}">Edit</a>
         </div>
       </div>
+      <hr class="my-1 mb-2"/>
+      <ol class="text-small ps-4 pe-2 ms-2 my-0">
+        <li class="my-1">
+            <div class="row">
+              <div class="col-7">
+                {% if user.first_name %} 
+                  <text class="text-small ms-2">{{ user.first_name|title }} {{ user.last_name|title }}</text>
+                {% else %}
+                  <text class="text-small ms-2">{{ user.username|title }}</text>
+                {% endif %}
+              </div>
+            </div>
+          </li>
+        {% for traveler in travelers %}
+        <li class="my-1">
+          <div class="row">
+            <div class="col-7">
+              <text class="text-small ms-2">{{ traveler.name }}</text>
+            </div>
+            <div class="col-5 text-end">
+              <text class="text-small text-end me-2">{{ traveler.gender }},&nbsp;&nbsp;{{ traveler.age }}</text>
+            </div>
+          </div>
+        </li>
+        {% endfor %}
+      </ol>
+    </div>
+  </div>
+  <div class="card card-shadow border-0 mt-4 ">
+    <div class="card-body">
+      <div class="card-title d-flex">
+        <div class="me-auto">
+          <text class="text-header me-auto">Packing List</text>
+        </div>
+        {% comment %} <div class="ms-auto">
+          <a class="text-header" href="{% url 'edit_trip' trip.id %}">Edit</a>
+        </div> {% endcomment %}
+      </div>
       {% for category, items in categorized_items.items %}
       {% if items|length > 0 %}
       <div>
-        <hr class="my-1" />
+        <hr class="my-1"/>
         <div class="d-flex pt-1">
           <text class="text-normal-bold me-auto">{{ category }}</text>
-          <text class="text-normal ms-auto" id="{{ category }}-checks">0</text>
+          {% comment %} <text class="text-normal ms-auto" id="{{ category }}-checks">0</text>
           <text class="text-normal">&nbsp;/</text>
-          <text class="text-normal">&nbsp;{{ items|length }}</text>
+          <text class="text-normal">&nbsp;{{ items|length }}</text> {% endcomment %}
         </div>
         {% for item in items %}
         <div class="form-check d-flex text-normal py-1 my-0 text-normal-indent">
           {% if item.personal %}
           <div class="me-auto">
-            {% if item.vote.checked %}
-              <input class="form-check-input" type="checkbox" id="flexCheckDefault" checked>
-            {% else %}
-              <input class="form-check-input" type="checkbox" id="flexCheckDefault">
-            {% endif %}
-            <label class="form-check-label text-personal" for="flexCheckDefault">{{ item.item.name|title }}</label>
-            <!-- EDIT ITEMSSSS-->
-            <form method="POST" action="{% url 'item' trip.id item.item.id %}">
-              {% csrf_token %}
-              <button type="submit">Edit</button>
-            </form>
-            <!-- done -->
-          </div>
-          {% comment %} <div class="ms-0 me-auto">
-            <a>
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                class="bi bi-three-dots" viewBox="0 0 16 16">
-                <path
-                  d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z" />
-              </svg>
+              <input class="form-check-input item-checkbox" type="checkbox" id="flexCheckDefault" name="{{ item.vote.id }}" {% if item.vote.checked %} checked {% endif %}>
+            <a href="{% url 'item' trip.id item.item.id %}">
+              <text class="form-check-label text-personal" for="flexCheckDefault">{{ item.item.name|title }}</text>
             </a>
-          </div> {% endcomment %}
+          </div>
+          {% if item.item.public == True %}
+            <div class="ms-3 d-flex score-div justify-content-around">
+              <svg width="16" height="24" viewBox="0 0 16 16" fill="#C4C4C4" xmlns="http://www.w3.org/2000/svg" class="score score-up me-auto {% if item.vote.vote > 0 %} score-up-post {% endif %}">
+                <path d="M13 8.35714L6.5 0L0 8.35714H3.28333V13H9.71667V8.35714H13Z" class="path" />
+              </svg>
+              <label class="form-check-label score-value text-muted" name="{{ item.item.id }}" for="flexCheckDefault">{{item.sum_votes }}</label>
+              <svg width="16" height="24" viewBox="0 0 16 16" fill="#C4C4C4" xmlns="http://www.w3.org/2000/svg" class="score score-down ms-auto {% if item.vote.vote < 0 %} score-down-post {% endif %}">
+                <path d="M13 4.64286L6.5 13L0 4.64286H3.28333V3.57628e-07H9.71667V4.64286H13Z" class="path"/>
+              </svg>
+            </div>
+            {% else %}
+            <div class="ms-3 d-flex score-div justify-content-around">
+              <text class="text-muted fst-italic">Private</text>
+            </div>
+          {% endif %}
           {% else %}
           <div class="me-auto">
-            <input class="form-check-input" type="checkbox" id="flexCheckDefault">
+            <input class="form-check-input item-checkbox" type="checkbox" id="flexCheckDefault" name="{{ item.vote.id }}" {% if item.vote.checked %} checked {% endif %}>
             <label class="form-check-label" for="flexCheckDefault">{{ item.item.name|title }}</label>
           </div>
-          {% endif %}
           <div class="ms-3 d-flex score-div">
             <svg width="16" height="24" viewBox="0 0 16 16" fill="#C4C4C4" xmlns="http://www.w3.org/2000/svg" class="score score-up me-auto {% if item.vote.vote > 0 %} score-up-post {% endif %}">
               <path d="M13 8.35714L6.5 0L0 8.35714H3.28333V13H9.71667V8.35714H13Z" class="path" />
@@ -175,6 +212,7 @@
               <path d="M13 4.64286L6.5 13L0 4.64286H3.28333V3.57628e-07H9.71667V4.64286H13Z" class="path"/>
             </svg>
           </div>
+          {% endif %}
         </div>
         {% endfor %}
       </div>
@@ -182,102 +220,15 @@
       {% endfor %}
     </div>
   </div>
-  <div class="text-center">
-    <button class="btn button-hover button-shadow border-0 mt-4" type="button" data-toggle="collapse" data-target=".multi-collapse" aria-expanded="false" aria-controls="collapseExample">
-      <text class="text-normal">+ Add Item</text>
-    </button>
-  </div>
-</div>
-<div class="collapse multi-collapse hide" id="container-item">
-  <a href="{{ previous_url.url }}">
-    <div class="mt-4 px-4">
-      <svg width="12" height="21" viewBox="0 0 12 21" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M9.60938 20.3906C9.86719 20.6484 10.1953 20.7891 10.582 20.7891C11.3555 20.7891 11.9766 20.1797 11.9766 19.4062C11.9766 19.0195 11.8125 18.668 11.543 18.3984L3.33984 10.3828L11.543 2.39062C11.8125 2.12109 11.9766 1.75781 11.9766 1.38281C11.9766 0.609375 11.3555 0 10.582 0C10.1953 0 9.86719 0.140625 9.60938 0.398438L0.492188 9.30469C0.164062 9.60938 0.0117188 9.98438 0 10.3945C0 10.8047 0.164062 11.1562 0.492188 11.4727L9.60938 20.3906Z" fill="#16056B"/>
-      </svg>
-      <text class="text-header ms-1 align-middle">{{ trip.city }}, {{ trip.country}}</text>
+  <a href="{% url "add_item" trip.id %}">
+    <div class="text-center">
+      <button class="btn button-hover button-shadow border-0 mt-3" type="button" data-toggle="collapse" data-target=".multi-collapse" aria-expanded="false" aria-controls="collapseExample">
+        <text class="text-card-title">+ Add Item</text>
+      </button>
     </div>
   </a>
-  <div class="container px-4" id="mobile-container">
-    <form method="POST" action="{% url 'add_item' trip.id %}">
-      {% csrf_token %}
-      <div class="row g-3 mt-4">
-        <div class="col-12">
-          <div class="input-group-sm mb-3">
-            <label for="name" class="form-label text-header">Item Name</label>
-            <input type="text" class="form-control" name="name" required>
-          </div>
-        </div>
-        <div class="col-6">
-          <div class="input-group-sm mb-3">
-            <label for="category" class="form-label text-header">Category</label>
-            <select type="select" class="form-select form-select-sm px-2" name="category" id="category" required>
-              <option value="" disabled selected>Select Option</option>
-              {% for category in categories  %}
-              <option value="{{ category }}">{{ category }}</option>
-              {% endfor %}
-            </select>
-          </div>
-        </div>
-        <div class="col-6">
-          <div class="input-group-sm mb-3">
-            <label for="season" class="form-label text-header">Season</label>
-            <select type="select" class="form-select form-select-sm px-2" name="season" id="season">
-              {% for season in seasons %}
-              <option value="{{ season}}">{{ season}}</option>
-              {% endfor %}
-            </select>
-          </div>
-        </div>
-        <div class="col-6">
-          <div class="input-group-sm mb-3">
-            <label for="age" class="form-label text-header">Age Group</label>
-            <select type="select" class="form-select form-select-sm px-2" name="age" id="age">
-              {% for age in ages %}
-              <option value="{{ age}}">{{ age}}</option>
-              {% endfor %}
-            </select>
-          </div>
-        </div>
-        <div class="col-6">
-          <div class="input-group-sm mb-3">
-            <label for="gender" class="form-label text-header">Gender</label>
-            <select type="select" class="form-select form-select-sm px-2" name="gender" id="gender">
-              {% for gender in genders %}
-              <option value="{{ gender }}">{{ gender }}</option>
-              {% endfor %}
-            </select>
-          </div>
-        </div>
-        <div class="col-12">
-          <label for="activities" class="form-label text-header">Activities</label>
-          <div class="row g-3">
-            {% for activity in activities %}
-              {% if activity != "All" %}
-              <div class="col-4">
-                <label class="card card-shadow card-activity " for="activity-{{ activity }}">
-                  <input type="checkbox" class="btn-check" name="activities" value="{{ activity }}" id="activity-{{ activity }}">
-                  <div class="card-body p-1 d-flex flex-column justify-content-center align-items-center">
-                    <text class="text-activities align-middle">{{ activity }}</text>
-                  </div>
-                </label>
-              </div>
-              {% endif %}
-            {% endfor %}
-          </div>
-        </div>
-      </div>
-      <div class="text-center mt-1">
-        <button type="submit" class="btn button-hover button-shadow border-0 mt-4">
-          <text class="text-normal">+ Create Item</text>
-        </button>
-      </div>
-    </form>
-  </div>
 </div>
 <input type="hidden" id="trip_id" value="{{ trip.id}}">
 
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 <script src="/static/javascript/trip.js"></script>
 {% endblock %}

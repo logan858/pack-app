@@ -55,8 +55,8 @@ body {
 .text-normal-bold {
     font-style: normal;
     font-weight: bold;
-    font-size: 12px;
-    line-height: 15px;
+    font-size: 13px;
+    line-height: 21px;
     color: #16056B;
 }
 
@@ -79,7 +79,7 @@ body {
 }
 
 .text-normal-indent {
-    margin-left: 20px;
+    margin-left: 10px;
 }
 
 .card-shadow {
@@ -278,7 +278,6 @@ header {
 }
 
 .text-personal {
-    font-weight: bold;
     color: red;
 }
 

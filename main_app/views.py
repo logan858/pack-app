@@ -22,31 +22,33 @@ import ast
 
 
 def home(request):
-    trips = []
-    my_trips = Trip.objects.filter(user_id=request.user.id)
-    past_trips = False
-    today = date.today()
-    for my_trip in my_trips:
-        if my_trip.date < today:
-            past_trips = True
-        trips.append({
-            "trip": my_trip,
-            "travelers": Traveler.objects.filter(trip_id=my_trip)
-        })
-    trips.reverse()
+    if request.user.is_authenticated:
+        trips = []
+        my_trips = Trip.objects.filter(user_id=request.user.id)
+        past_trips = False
+        today = date.today()
+        for my_trip in my_trips:
+            if my_trip.date < today:
+                past_trips = True
+            trips.append({
+                "trip": my_trip,
+                "travelers": Traveler.objects.filter(trip_id=my_trip)
+            })
+        trips.reverse()
 
-    return render(request, 'index.html', {
-        "trips": trips[:3],
-        "past_trips": past_trips,
-    })
+        return render(request, 'index.html', {
+            "trips": trips[:3],
+            "past_trips": past_trips,
+            "num_trips" :len(trips)
+        })
+    else:
+        return redirect("accounts/login/")
 
 @user_passes_test(lambda u: u.is_anonymous, '/')
 def signup(request):
     error_message = ''
     if request.method == 'POST':
-        print(request.POST)
         form = UserCreationForm(request.POST)
-        print(form)
         if form.is_valid():
             user = form.save()
             user.first_name = request.POST["first_name"]
@@ -63,7 +65,6 @@ def signup(request):
 
 def search(request):
     if request.method == "POST":
-        print(request.POST)
         return render(request, "results.html", {
             "destination": request.POST["destination"],
             "activity": request.POST["activity"],
@@ -86,7 +87,7 @@ def new_trip(request):
             "title": "Add New Trip",
             "previous_url": {
                 "url": "/",
-                "text": "All Trips"
+                "text": "Home"
             },
             "activities": activities,
             "number_items" : NUMBERS_ITEMS
@@ -152,7 +153,7 @@ def trip(request, trip_id):
         activities = Activity.objects.filter(trip_id=trip.id)
         filtered_items = []
         for i in range(len(activities)):
-            filtered_items_temp = Item.objects.filter(city=trip.city, country=trip.country, season=trip.season, activity=activities[i].activity, trip_id=None, public=True)
+            filtered_items_temp = Item.objects.filter(city__contains=trip.city, country=trip.country, season=trip.season, activity=activities[i].activity, trip_id=None, public=True)
             filtered_items.extend(filtered_items_temp)
         filtered_items = list(set(filtered_items))
 
@@ -199,9 +200,11 @@ def trip(request, trip_id):
         for category in categories:
             categorized_items[category] = []
 
+
         for i in range(len(sorted_items)):
             old_item = sorted_items[i]
             categorized_items[old_item["item"].category].append(old_item)
+        
         activities = getChoices(ACTIVITIES)
         # weather api call below this line
         city = "%s,%s" % (trip.city,trip.country)
@@ -213,10 +216,14 @@ def trip(request, trip_id):
         current_temp_low = f"{int(data['days'][0]['tempmin'])}\u00B0C"
         icon = data['days'][0]['icon']
         current_condition = data['days'][0]['conditions']
-
         
+        travelers = Traveler.objects.filter(trip_id=trip.id)
         return render(request, "trips/trip.html", {
-            "title": "%s, %s" % (trip.city, trip.country),
+            "title": "Home",
+            "previous_url": {
+            "url": "/",
+            "text": "Home"
+            },
             "categorized_items": categorized_items,
             "activities": activities,
             "categories": categories,
@@ -224,6 +231,7 @@ def trip(request, trip_id):
             "ages" : getChoices(AGES),
             "genders" : getChoices(GENDERS),
             "trip": trip,
+            "travelers" : travelers,
             "forecast" : weather_forecast,
             "today_temp_high" : current_temp_high,
             "today_temp_low" : current_temp_low,
@@ -242,8 +250,13 @@ def edit_trip(request, trip_id):
         for activity in Activity.objects.filter(trip_id=trip.id):
             my_activities.append(activity.activity)
         
-        print(my_activities)
         return render(request, "trips/trip_form.html", {
+            "trip" : "My Trip",
+            "previous_url": {
+            "url": "/",
+            "text": "%s, %s" % (trip.city, trip.country)
+            },
+            "title" : "Edit Trip",
             "edit" : True,
             "trip": trip,
             "travellers": travelers,
@@ -254,8 +267,6 @@ def edit_trip(request, trip_id):
         })
     elif request.method =="POST":
         body = request.POST
-        print(body)
-
         search = re.split(', | - ', body['search'])
         date = body["date"]
         month = date.split("-")[1]
@@ -317,48 +328,75 @@ def delete_trip(request, trip_id):
 
 @login_required
 def add_item(request, trip_id):
-    body = request.POST
     trip = Trip.objects.get(id=trip_id)
-    new_item = Item.objects.create(
-        name=body['name'],
-        city=trip.city,
-        country=trip.country,
-        season=body['season'],
-        activity=body['activities'],
-        gender=body["gender"],
-        age=body["age"],
-        category=body['category'],
-        trip_id=trip_id,
-        # public=public
-    )
-    new_item.save()
-    return redirect("/trip/%s/" % (trip_id))
+    if request.method == "GET":
+        return render(request, "items/item.html", {
+            "previous_url": {
+            "url": "/trip/%s" % (trip.id),
+            "text": "%s, %s" % (trip.city, trip.country)
+            },
+            "add_item" : True,
+            "trip" : trip,
+            "categories": getChoices(CATEGORIES),
+            "seasons" : getChoices(SEASONS),
+            "ages" : getChoices(AGES),
+            "genders" : getChoices(GENDERS),
+            "activities": getChoices(ACTIVITIES),
+        })
+    elif request.method == "POST":
+        body = request.POST
+        if body["privacy"] == "true":
+            privacy = True
+        else:
+            privacy = False
+        new_item = Item.objects.create(
+            name=body['name'],
+            city=trip.city,
+            country=trip.country,
+            season=body['season'],
+            activity=body['activities'],
+            gender=body["gender"],
+            age=body["age"],
+            category=body['category'],
+            trip_id=trip_id,
+            public=privacy
+        )
+        new_item.save()
+        return redirect("/trip/%s/" % (trip_id))
 
 def item(request, trip_id, item_id):
     trip = Trip.objects.get(id=trip_id)
     item = Item.objects.get(id=item_id)
-    print(trip, item)
-    return render(request, "items/view_item.html", {
-        "trip": trip,
-        "item": item,
-        "categories": getChoices(CATEGORIES),
-        "seasons" : getChoices(SEASONS),
-        "ages" : getChoices(AGES),
-        "genders" : getChoices(GENDERS),
-        "activities": getChoices(ACTIVITIES),
-    })
-
-def edit_item(request, trip_id, item_id):
-    trip = Trip.objects.get(id=trip_id)
-    item = Item.objects.get(id=item_id)
-    item.name = request.POST["name"]
-    item.category = request.POST["category"]
-    item.season = request.POST["season"]
-    item.age = request.POST["age"]
-    item.gender = request.POST["gender"]
-    item.activity = request.POST["activities"]
-    item.save()
-    return redirect("/trip/%s/" % (trip.id))
+    if request.method == "GET":
+        return render(request, "items/item.html", {
+            "previous_url": {
+            "url": "/trip/%s" % (trip.id),
+            "text": "%s, %s" % (trip.city, trip.country)
+        },
+            "trip": trip,
+            "item": item,
+            "categories": getChoices(CATEGORIES),
+            "seasons" : getChoices(SEASONS),
+            "ages" : getChoices(AGES),
+            "genders" : getChoices(GENDERS),
+            "activities": getChoices(ACTIVITIES),
+        })
+    elif request.method =="POST":
+        body = request.POST
+        if body["privacy"] == "true":
+            privacy = True
+        else:
+            privacy = False
+            
+        item.name = body["name"]
+        item.category = body["category"]
+        item.season = body["season"]
+        item.age = body["age"]
+        item.gender = body["gender"]
+        item.activity = body["activities"]
+        item.public = privacy
+        item.save()
+        return redirect("/trip/%s/" % (trip.id))
 
 def delete_item(request, trip_id, item_id):
     trip = Trip.objects.get(id=trip_id)
@@ -382,7 +420,7 @@ def upcoming_trips(request):
     return render(request, "trips/upcoming_trips.html", {
         "previous_url": {
             "url": "/",
-            "text": "All Trips"
+            "text": "Home"
         },
         "trips": trips,
     })
@@ -403,10 +441,22 @@ def past_trips(request):
     return render(request, "trips/past_trips.html", {
         "previous_url": {
             "url": "/",
-            "text": "All Trips"
+            "text": "Home"
         },
         "trips": trips,
     })
+
+@login_required
+def checkbox(request):
+    if request.method == "POST":
+        body = ast.literal_eval(request.body.decode())
+        trip = Trip.objects.get(id=int(body["trip_id"]))
+        user = trip.user
+        value = body["value"]
+        vote = Vote.objects.get(id=int(body["vote_id"]))
+        vote.checked = value
+        vote.save()
+        return JsonResponse({},status=200)
 
 @login_required
 def vote(request):
