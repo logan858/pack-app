@@ -50,4 +50,4 @@ Techicals:
 2. We also utilized the Google Maps API and The Visual Weather API to create a better user experience. 
 
 Conclusion:
-We were able both our design and technical goals that we initally laid out for ourselves.
+We were able to achieve both our design and technical goals that we initally laid out for ourselves.
