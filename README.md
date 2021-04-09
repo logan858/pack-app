@@ -7,7 +7,7 @@
 
 ## Design Team
 * [Marielle Lacea]()
-* [Mike Lown]()
+* [Mike Lown](http://linkedin.com/in/mike-j-lown)
 * [Shirley Lam]()
 
 ## Description
