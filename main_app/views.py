@@ -153,7 +153,7 @@ def trip(request, trip_id):
         activities = Activity.objects.filter(trip_id=trip.id)
         filtered_items = []
         for i in range(len(activities)):
-            filtered_items_temp = Item.objects.filter(city=trip.city, country=trip.country, season=trip.season, activity=activities[i].activity, trip_id=None, public=True)
+            filtered_items_temp = Item.objects.filter(city__contains=trip.city, country=trip.country, season=trip.season, activity=activities[i].activity, trip_id=None, public=True)
             filtered_items.extend(filtered_items_temp)
         filtered_items = list(set(filtered_items))
 
