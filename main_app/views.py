@@ -12,7 +12,6 @@ import os
 import requests
 from .models import User, Trip, Vote, Item, Activity, Traveler, CATEGORIES, ACTIVITIES, SEASONS, AGES, GENDERS, getChoices, NUMBERS_ITEMS
 import re, json
-import requests
 
 from datetime import date
 import ast
